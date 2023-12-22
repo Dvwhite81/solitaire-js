@@ -1,8 +1,8 @@
 {
   "lang": "en-EN",
-  "name": "Checkers",
-  "short_name": "Checkers",
-  "description": "Start a Vanilla JavaScript App, SPA, landing page or website using Webpack, Babel, Core-JS, SASS / SCSS.",
+  "name": "Solitaire",
+  "short_name": "Solitaire",
+  "description": "Vanilla JS Solitaire game",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

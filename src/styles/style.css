@@ -1,90 +1,111 @@
 :root {
-  --square-size: calc(10vh - 2px);
+  --even-width: calc(100vw / 7);
+  --card-height: calc(100vh / 5);
+  --card-width: calc((var(--card-height)) * .714);
+  --container-height: calc(var(--card-height) * 1.2);
+  --container-width: calc(var(--card-width) * 1.2);
+  --overlap-margin: calc((var(--card-height) * 0.8) * -1);
 }
 
 /* Main container */
 #container {
-	background-color: burlywood;
+  background: url('../assets/images/background.jpg');
+  background-size: cover;
 	display: flex;
 	height: 100vh;
 	width: 100vw;
 }
 
-/* Start Modal and Skip Button */
-#open-modal-btn {
-  background-color: sienna;
-  border: none;
+#board {
+  display: grid;
+  grid-template-rows: 30vh 70vh;
+  height: 100%;
+  width: 100%;
+}
+
+#top-board {
+  display: grid;
+  grid-template-columns: var(--even-width) calc(var(--even-width) * 2) calc(var(--even-width) * 4);
+}
+
+.ace-slot-container,
+#deck-container,
+#discard-pile-container {
+  align-items: center;
+  display: grid;
+  justify-content: center;
+}
+
+#ace-slots-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#card-slots-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: 100%;
+}
+
+.card-slot-container {
+  display: grid;
+  justify-content: center;
+}
+
+.ace-slot,
+.card-slot,
+.card,
+#deck,
+.card-front,
+.card-back {
+  background-size: cover;
   border-radius: 10px;
-  color: bisque;
-  cursor: pointer;
-  font-weight: bold;
-  left: 50%;
-  padding: 5px 10px;
+  height: var(--card-height);
+  width: var(--card-width);
+}
+
+#deck,
+#discard-pile,
+.ace-slot {
+  border: 1px solid white;
+}
+
+#deck-container {
+  position: relative;
+}
+
+#deck .card {
   position: absolute;
-  top: 0.5rem;
-  transform: translate(-50%, 0%);
 }
 
-#open-modal-btn:hover {
-  background-color: bisque;
-  color: sienna;
-}
-
-#myModal {
-	background-color: sienna;
-  border-radius: 10px;
-  color: bisque;
-  display: none;
-  height: 50%;
-  left: 50%;
-  overflow: auto;
+#deck-count {
+  background: white;
+  border-radius: 50%;
+  bottom: 23%;
+  color: blue;
+  font-size: 3rem;
+  font-weight: bold;
+  left: 35%;
   padding: 1rem;
-  position: fixed;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  width: 50%;
-  z-index: 1;
+  position: absolute;
 }
 
-#modal-content {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	text-align: center;
-	width: 100%;
+#discard-pile {
+  border: none;
+  display: flex;
+  height: var(--card-height);
+  width: calc(var(--card-width) * 2);
 }
 
-#close-modal {
-	color: bisque;
-	font-size: 28px;
-	font-weight: bold;
-	position: absolute;
-	top: 0;
-	right: 5px;
+#discard-pile .card:not(:first-child) {
+  margin-left: var(--overlap-right-margin);
 }
 
-#close-modal:hover,
-#close-modal:focus {
-	color: black;
-	text-decoration: none;
-	cursor: pointer;
+.ace-slot {
+  background: url('../assets/images/ace-background.png');
+  background-size: cover;
 }
 
-#modal-submit-btn {
-	background-color: bisque;
-  border: 1px solid bisque;
-	border-radius: 10px;
-	color: sienna;
-	cursor: pointer;
-	font-weight: bold;
-	margin: 0 auto;
-	padding: 5px 10px;
-	width: fit-content;
+.card-slot .card:not(:first-child) {
+  margin-top: var(--overlap-down-margin);
 }
-
-#modal-submit-btn:hover {
-  background-color: sienna;
-  color: bisque;
-}
-/* End Modal */
