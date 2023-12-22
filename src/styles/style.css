@@ -1,10 +1,11 @@
 :root {
   --even-width: calc(100vw / 7);
   --card-height: calc(100vh / 5);
-  --card-width: calc((var(--card-height)) * .714);
+  --card-width: calc((var(--card-height)) * 0.714);
   --container-height: calc(var(--card-height) * 1.2);
   --container-width: calc(var(--card-width) * 1.2);
-  --overlap-margin: calc((var(--card-height) * 0.8) * -1);
+  --overlap-down-margin: calc((var(--card-height) * 0.8) * -1);
+  --overlap-right-margin: calc((var(--card-width) * 0.5) * -1);
 }
 
 /* Main container */
@@ -81,9 +82,9 @@
 #deck-count {
   background: white;
   border-radius: 50%;
-  bottom: 23%;
+  bottom: 42%;
   color: blue;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   left: 35%;
   padding: 1rem;
