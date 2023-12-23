@@ -1,5 +1,5 @@
 import { convertToNewCard, createCard, discardPile, hideShuffleButton } from './dom-helpers';
-import { placeDeck } from './game-helpers';
+import { addCardListeners, placeDeck } from './game-helpers';
 
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
@@ -49,6 +49,7 @@ const reshuffleDeck = () => {
   deck.reverse();
   placeDeck(deck);
   hideShuffleButton();
+  addCardListeners();
 };
 
 export { BLACKS, getShuffledDeck, REDS, reshuffleDeck, SUITS };
