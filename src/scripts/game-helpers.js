@@ -80,8 +80,6 @@ const handleCardClick = (e) => {
   }
   if (isValidToClick(card, parentElement)) {
     handleValidCardClick(card);
-  } else {
-    // Make a shake "no" animation
   }
 };
 
@@ -98,6 +96,12 @@ const handleValidCardClick = (card) => {
   if (possibleMoves && possibleMoves.length > 0) {
     const move = possibleMoves[0];
     moveCard(card, move);
+  } else {
+    // Make a shake "no" animation
+    card.classList.add('shake');
+    setTimeout(() => {
+      card.classList.remove('shake');
+    }, 1000);
   }
 };
 

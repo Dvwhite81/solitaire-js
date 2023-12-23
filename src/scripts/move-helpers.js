@@ -19,6 +19,8 @@ const getPossibleMoves = (card) => {
 
   if (value === 14) {
     addToAceSlot(card, suit);
+    // just to avoid shaking for no valid moves
+    return ['ace'];
   } else if (value === 13) {
     return handleKing(card, suit);
   } else if (canAddToAceSlot(suit, validNumber)) {
