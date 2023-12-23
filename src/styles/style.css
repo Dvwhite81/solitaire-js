@@ -17,6 +17,7 @@
 	width: 100vw;
 }
 
+/* Whole game container */
 #board {
   display: grid;
   grid-template-rows: 30vh 70vh;
@@ -24,6 +25,7 @@
   width: 100%;
 }
 
+/* Top section - Deck, Discard, Ace Slots */
 #top-board {
   display: grid;
   grid-template-columns: var(--even-width) calc(var(--even-width) * 2) calc(var(--even-width) * 4);
@@ -37,34 +39,6 @@
   justify-content: center;
 }
 
-#ace-slots-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-#card-slots-container {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  height: 100%;
-}
-
-.card-slot-container {
-  display: grid;
-  justify-content: center;
-}
-
-.ace-slot,
-.card-slot,
-.card,
-#deck,
-.card-front,
-.card-back {
-  background-size: cover;
-  border-radius: 10px;
-  height: var(--card-height);
-  width: var(--card-width);
-}
-
 #deck,
 #discard-pile,
 .ace-slot {
@@ -75,20 +49,58 @@
   position: relative;
 }
 
+#deck {
+  display: flex;
+}
+
+#shuffle-btn {
+  background: transparent;
+  background-image: url('../assets/images/refresh-white.png');
+  background-size: contain;
+  border: none;
+  cursor: pointer;
+  display: none;
+  height: 7rem;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 7rem;
+}
+
+#shuffle-btn:hover {
+  background-color: black;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+}
+
 #deck .card {
   position: absolute;
 }
 
+#deck .card .card-front {
+  display: none;
+}
+
 #deck-count {
-  background: white;
+  background: #fff;
   border-radius: 50%;
-  bottom: 42%;
+  bottom: 10%;
   color: blue;
   font-size: 2.5rem;
-  font-weight: bold;
-  left: 35%;
+  font-weight: 700;
+  left: 50%;
   padding: 1rem;
   position: absolute;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  width: 2.5rem;
+}
+
+#deck,
+#deck-count {
+  cursor: pointer;
 }
 
 #discard-pile {
@@ -96,6 +108,10 @@
   display: flex;
   height: var(--card-height);
   width: calc(var(--card-width) * 2);
+}
+
+#discard-pile .card .card-back {
+  display: none;
 }
 
 #discard-pile .card:not(:first-child) {
@@ -107,6 +123,41 @@
   background-size: cover;
 }
 
+#ace-slots-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Bottom section - Card Slots */
+#card-slots-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: 100%;
+}
+
+.card-slot-container {
+  display: grid;
+  justify-content: center;
+}
+
 .card-slot .card:not(:first-child) {
   margin-top: var(--overlap-down-margin);
+}
+
+/* Cards */
+.ace-slot,
+.card-slot,
+.card,
+#deck,
+.card-front,
+.card-back {
+  background-size: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  height: var(--card-height);
+  width: var(--card-width);
+}
+
+.hidden-discard {
+  display: none;
 }

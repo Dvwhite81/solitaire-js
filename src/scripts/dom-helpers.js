@@ -1,3 +1,13 @@
+import { REDS, reshuffleDeck } from './card-helpers';
+
+const deckContainer = document.querySelector('#deck-container');
+const deckPile = document.querySelector('#deck');
+const deckCount = document.querySelector('#deck-count');
+const discardPile = document.querySelector('#discard-pile');
+const aceSlots = document.querySelectorAll('.ace-slot');
+const cardSlots = document.querySelectorAll('.card-slot');
+const shuffleBtn = document.querySelector('#shuffle-btn');
+
 const buildElement = (type, properties, attributes) => {
   const element = document.createElement(type);
 
@@ -12,7 +22,9 @@ const buildElement = (type, properties, attributes) => {
 
 const createCard = (card) => {
   const { suit, rank, value } = card;
-  const id = `${rank}_of_${suit}`;
+  console.log('create card:', card);
+  const rankStr = typeof rank === 'number' ? rank.toString() : rank;
+  const id = `${rankStr}_of_${suit}`;
   const { imgId, imgSrc, backSrc } = getImgs(id);
 
   const cardElement = buildElement('div', { id: id, className: 'card' }, { suit: suit, rank: rank, value: value });
@@ -30,29 +42,49 @@ const createCard = (card) => {
   return cardElement;
 };
 
-const handleCardImgs = (slots, slotType) => {
-  for (const slot of slots) {
-    const cards = slot.children;
-    for (const [i, card] of [...cards].entries()) {
-      const { frontDisplay, backDisplay } = getDisplay(slotType, i, length);
-      card.querySelector('.card-front').style.display = frontDisplay;
-      card.querySelector('.card-back').style.display = backDisplay;
-    }
+const convertToNewCard = (card) => {
+  console.log('convert card:', card);
+  const suit = card.getAttribute('suit');
+  const rank = card.getAttribute('rank');
+  const value = Number(card.getAttribute('value'));
+  const newCard = { suit, rank, value };
+  return createCard(newCard);
+};
+
+const handleOneCardSlotImgs = (slot) => {
+  console.log('handleOneSlot slot:', slot);
+  const { children } = slot;
+  const { length } = children;
+  if (length > 0) {
+    const lastCard = children[length - 1];
+    turnFaceUp(lastCard);
   }
 };
 
-const handleDealCardImgs = (slots) => {
+const turnFaceUp = (card) => {
+  card.querySelector('.card-front').style.display = 'flex';
+  card.querySelector('.card-back').style.display = 'none';
+};
+
+const handleCardSlotImgs = (slots, isDeal) => {
   for (const [x, slot] of slots.entries()) {
     const cards = slot.children;
+    const { length } = cards;
     for (const [y, card] of [...cards].entries()) {
-      card.querySelector('.card-front').style.display = x === y ? 'flex' : 'none';
-      card.querySelector('.card-back').style.display = x === y ? 'none' : 'flex';
+      card.querySelector('.card-front').style.display =
+        (isDeal && x === y) || (!isDeal && isLast(y, length)) ? 'flex' : 'none';
+      card.querySelector('.card-back').style.display = isLast(y, length) ? 'none' : 'flex';
     }
   }
 };
 
 const isLast = (index, length) => {
   return index === length - 1;
+};
+
+const isFaceUp = (card) => {
+  const cardFront = card.querySelector('.card-front');
+  return cardFront.style.display !== 'none';
 };
 
 const getImgs = (id) => {
@@ -62,20 +94,99 @@ const getImgs = (id) => {
   return { imgId, imgSrc, backSrc };
 };
 
-const getDisplay = (slotType, index, length) => {
-  const frontDisplay =
-    slotType === 'discard' ||
-    (slotType !== 'deck' && isLast(index, length)) ||
-    (slotType === 'card' && isLast(index, length))
-      ? 'flex'
-      : 'none';
-  const backDisplay = slotType === 'discard' || isLast(index, length) ? 'none' : 'flex';
-  const isValidToClick = (slotType === 'discard' || slotType === 'card') && isLast(index, length);
-  return { frontDisplay, backDisplay, isValidToClick };
-};
-
-const updateDeckCount = (length, deckCount) => {
+const updateDeckCount = (length) => {
   deckCount.textContent = length;
 };
 
-export { createCard, handleCardImgs, handleDealCardImgs, updateDeckCount };
+const handleDiscardDisplay = (isMove) => {
+  const cards = discardPile.children;
+  console.log('discard cards:', cards);
+  const { length } = cards;
+  if (length > 3) {
+    if (isMove) {
+      showPreviousCard(cards);
+    } else {
+      hideOverflowCards(cards, length);
+    }
+  }
+};
+
+const showPreviousCard = (cards) => {
+  const hidden = document.querySelectorAll('.hidden-discard');
+  console.log('hidden:', hidden);
+  const lastHidden = hidden[hidden.length - 1];
+  lastHidden.classList.remove('hidden-discard');
+  const index = [...cards].indexOf(lastHidden);
+  const nextCard = cards[index + 1];
+  console.log('nextCard:', nextCard);
+  nextCard.style.setProperty('margin-left', 'var(--overlap-right-margin)');
+};
+
+const hideOverflowCards = (cards, length) => {
+  for (let i = 0; i < length; i++) {
+    const card = cards[i];
+    if (i < length - 3) {
+      card.classList.add('hidden-discard');
+    }
+    if (i === length - 3) {
+      card.style.marginLeft = 0;
+    }
+  }
+};
+
+const getElementFromCard = (card) => {
+  const { rank, suit } = card;
+  const id = `${rank}_of_${suit}`;
+  // eslint-disable-next-line unicorn/prefer-query-selector
+  return document.getElementById(id);
+};
+
+const handleDeckCard = (pile) => {
+  const card = pile.pop();
+  const { length } = pile;
+  updateDeckCount(length);
+  return card;
+};
+
+const getCardInfo = (card) => {
+  const suit = card.getAttribute('suit');
+  const value = Number(card.getAttribute('value'));
+  const color = REDS.includes(suit) ? 'red' : 'black';
+  return { value, color };
+};
+
+const showShuffleButton = () => {
+  shuffleBtn.addEventListener('click', reshuffleDeck);
+  shuffleBtn.style.display = 'flex';
+  deckCount.style.display = 'none';
+};
+
+const hideShuffleButton = () => {
+  shuffleBtn.removeEventListener('click', reshuffleDeck);
+  shuffleBtn.style.display = 'none';
+  deckCount.style.display = 'flex';
+};
+
+export {
+  aceSlots,
+  cardSlots,
+  convertToNewCard,
+  createCard,
+  deckContainer,
+  deckCount,
+  deckPile,
+  discardPile,
+  getCardInfo,
+  getElementFromCard,
+  handleCardSlotImgs,
+  handleDeckCard,
+  handleDiscardDisplay,
+  handleOneCardSlotImgs,
+  hideShuffleButton,
+  isFaceUp,
+  isLast,
+  showShuffleButton,
+  shuffleBtn,
+  turnFaceUp,
+  updateDeckCount
+};

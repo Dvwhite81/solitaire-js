@@ -63,6 +63,7 @@
 		// end simple-import-sort
 
 		// unicorn
-		"unicorn/prevent-abbreviations": "off"
+		"unicorn/prevent-abbreviations": "off",
+		"sonarjs/no-duplicate-string": "off"
 	}
 }
