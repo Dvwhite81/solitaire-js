@@ -1,4 +1,5 @@
 import { REDS, reshuffleDeck } from './card-helpers';
+import { getLengthAndIndex } from './game-helpers';
 
 const deckContainer = document.querySelector('#deck-container');
 const deckPile = document.querySelector('#deck');
@@ -22,7 +23,6 @@ const buildElement = (type, properties, attributes) => {
 
 const createCard = (card) => {
   const { suit, rank, value } = card;
-  console.log('create card:', card);
   const rankStr = typeof rank === 'number' ? rank.toString() : rank;
   const id = `${rankStr}_of_${suit}`;
   const { imgId, imgSrc, backSrc } = getImgs(id);
@@ -167,6 +167,36 @@ const hideShuffleButton = () => {
   deckCount.style.display = 'flex';
 };
 
+const moveIsToAceSlot = (move) => {
+  return move.classList.contains('ace-slot');
+};
+
+const moveIsToEmptyCardSlot = (move) => {
+  return move.classList.contains('card-slot');
+};
+
+const getCardsAfter = (card) => {
+  const cards = [];
+  console.log('getCardsAfter card:', card);
+  const { parentElement } = card;
+  console.log('getCardsAfter parentElement:', parentElement);
+
+  const { children } = parentElement;
+  console.log('getCardsAfter children:', children);
+
+  const { length, index } = getLengthAndIndex(card, parentElement);
+  console.log('getCardsAfter length:', length);
+  console.log('getCardsAfter index:', index);
+
+  for (let i = index + 1; i < length; i++) {
+    const nextCard = children[i];
+    console.log('getCardsAfter nextCard:', nextCard);
+
+    cards.push(nextCard);
+  }
+  return cards;
+};
+
 export {
   aceSlots,
   cardSlots,
@@ -177,6 +207,7 @@ export {
   deckPile,
   discardPile,
   getCardInfo,
+  getCardsAfter,
   getElementFromCard,
   handleCardSlotImgs,
   handleDeckCard,
@@ -185,6 +216,8 @@ export {
   hideShuffleButton,
   isFaceUp,
   isLast,
+  moveIsToAceSlot,
+  moveIsToEmptyCardSlot,
   showShuffleButton,
   shuffleBtn,
   turnFaceUp,

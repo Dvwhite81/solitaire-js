@@ -3,6 +3,7 @@ import {
   deckPile,
   discardPile,
   getCardInfo,
+  getCardsAfter,
   handleCardSlotImgs,
   handleDeckCard,
   handleDiscardDisplay,
@@ -12,7 +13,7 @@ import {
   shuffleBtn,
   updateDeckCount
 } from './dom-helpers';
-import { cardsAfterAreInOrder, getPossibleMoves, moveCard } from './move-helpers';
+import { cardsAfterAreInOrder, getPossibleMoves, handleMove } from './move-helpers';
 
 const placeDeck = (deck) => {
   const { length } = deck;
@@ -47,7 +48,6 @@ const dealOneCard = (deck, slots, i) => {
 
 const flipCard = (e) => {
   const deck = [...deckPile.children];
-  console.log('deck:', deck);
   if (e.target === shuffleBtn) {
     return;
   }
@@ -84,18 +84,19 @@ const handleCardClick = (e) => {
 };
 
 const isValidToClick = (card, parent) => {
-  const { children } = parent;
-  const { length } = children;
-  const index = [...children].indexOf(card);
+  console.log('isValidToClick');
+  const { length, index } = getLengthAndIndex(card, parent);
   const { value, color } = getCardInfo(card);
-  return (isLast(index, length) || cardsAfterAreInOrder(card, value, color)) && isFaceUp(card);
+  const nextCards = getCardsAfter(card);
+  return (isLast(index, length) || cardsAfterAreInOrder(nextCards, value, color)) && isFaceUp(card);
 };
 
 const handleValidCardClick = (card) => {
+  console.log('handleValidCardClick');
   const possibleMoves = getPossibleMoves(card);
   if (possibleMoves && possibleMoves.length > 0) {
     const move = possibleMoves[0];
-    moveCard(card, move);
+    handleMove(card, move);
   } else {
     // Make a shake "no" animation
     card.classList.add('shake');
@@ -113,4 +114,20 @@ const checkForShuffle = () => {
   }
 };
 
-export { addCardListeners, addDeckListeners, dealCards, flipCard, isValidToClick, placeDeck, removeDeckListeners };
+const getLengthAndIndex = (card, parent) => {
+  const { children } = parent;
+  const { length } = children;
+  const index = [...children].indexOf(card);
+  return { length, index };
+};
+
+export {
+  addCardListeners,
+  addDeckListeners,
+  dealCards,
+  flipCard,
+  getLengthAndIndex,
+  isValidToClick,
+  placeDeck,
+  removeDeckListeners
+};

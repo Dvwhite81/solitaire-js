@@ -8,6 +8,11 @@
   --overlap-right-margin: calc((var(--card-width) * 0.5) * -1);
 }
 
+html {
+  background: url('../assets/images/background.jpg');
+  background-size: cover;
+}
+
 /* Main container */
 #container {
   background: url('../assets/images/background.jpg');
