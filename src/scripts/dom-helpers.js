@@ -1,4 +1,5 @@
 import { REDS, reshuffleDeck } from './card-helpers';
+import { resetGame } from './game';
 import { getLengthAndIndex } from './game-helpers';
 
 const deckContainer = document.querySelector('#deck-container');
@@ -8,6 +9,9 @@ const discardPile = document.querySelector('#discard-pile');
 const aceSlots = document.querySelectorAll('.ace-slot');
 const cardSlots = document.querySelectorAll('.card-slot');
 const shuffleBtn = document.querySelector('#shuffle-btn');
+const modal = document.querySelector('#modal');
+const modalSubmit = document.querySelector('#modal-submit');
+const resetBtn = document.querySelector('#reset-btn');
 
 const buildElement = (type, properties, attributes) => {
   const element = document.createElement(type);
@@ -197,9 +201,28 @@ const getCardsAfter = (card) => {
   return cards;
 };
 
+const openModal = () => {
+  modal.style.display = 'flex';
+  modalSubmit.addEventListener('click', closeModal);
+};
+
+const closeModal = () => {
+  modal.style.display = 'none';
+  resetGame();
+};
+
+const clearBoard = () => {
+  const slotsToClear = [...aceSlots, ...cardSlots, deckPile, discardPile];
+  for (const slot of slotsToClear) {
+    console.log('clear slot:', slot);
+    slot.innerHTML = '';
+  }
+};
+
 export {
   aceSlots,
   cardSlots,
+  clearBoard,
   convertToNewCard,
   createCard,
   deckContainer,
@@ -218,6 +241,8 @@ export {
   isLast,
   moveIsToAceSlot,
   moveIsToEmptyCardSlot,
+  openModal,
+  resetBtn,
   showShuffleButton,
   shuffleBtn,
   turnFaceUp,

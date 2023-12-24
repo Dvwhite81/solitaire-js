@@ -1,4 +1,6 @@
 import {
+  aceSlots,
+  cardSlots,
   deckContainer,
   deckPile,
   discardPile,
@@ -13,7 +15,8 @@ import {
   shuffleBtn,
   updateDeckCount
 } from './dom-helpers';
-import { cardsAfterAreInOrder, getPossibleMoves, handleMove } from './move-helpers';
+import { endGame } from './game';
+import { cardsAfterAreInOrder, getPossibleMoves, handleAutoFinish, handleMove } from './move-helpers';
 
 const placeDeck = (deck) => {
   const { length } = deck;
@@ -121,9 +124,58 @@ const getLengthAndIndex = (card, parent) => {
   return { length, index };
 };
 
+const checkForAutoFinish = () => {
+  let readyToFinish = true;
+  for (const slot of cardSlots) {
+    const { children } = slot;
+    if (!allFaceUp(children)) {
+      readyToFinish = false;
+    }
+  }
+  console.log('readyToFinish:', readyToFinish);
+  return readyToFinish;
+};
+
+const allFaceUp = (cards) => {
+  let faceUp = true;
+  for (const card of cards) {
+    if (!isFaceUp(card)) {
+      faceUp = false;
+      console.log('card is face up:', card);
+    }
+  }
+  return faceUp;
+};
+
+const checkAllAceSlotsFilled = () => {
+  let gameOver = true;
+  for (const slot of aceSlots) {
+    const { children } = slot;
+    const { length } = children;
+    if (length < 13) {
+      gameOver = false;
+    }
+  }
+  return gameOver;
+};
+
+const checkGameOver = () => {
+  console.log('checkGameOver');
+  const readyToFinish = checkForAutoFinish();
+  if (readyToFinish) {
+    handleAutoFinish();
+  }
+  const gameOver = checkAllAceSlotsFilled();
+  if (gameOver) {
+    endGame();
+  }
+};
+
 export {
   addCardListeners,
   addDeckListeners,
+  checkForAutoFinish,
+  checkGameOver,
   dealCards,
   flipCard,
   getLengthAndIndex,

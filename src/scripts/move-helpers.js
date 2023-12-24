@@ -13,13 +13,11 @@ import {
   moveIsToEmptyCardSlot,
   turnFaceUp
 } from './dom-helpers';
-import { getLengthAndIndex } from './game-helpers';
+import { checkGameOver, getLengthAndIndex } from './game-helpers';
 
 const getPossibleMoves = (card) => {
-  console.log('getPossibleMoves');
   const moves = [];
   const { parentElement } = card;
-  const { length, index } = getLengthAndIndex(card, parentElement);
   const { value, color } = getCardInfo(card);
   const suit = card.getAttribute('suit');
   const validSuits = color === 'red' ? BLACKS : REDS;
@@ -27,23 +25,19 @@ const getPossibleMoves = (card) => {
 
   // Cards already in ace slot - can only move to card slots
   if (parentElement.classList.contains('ace-slot')) {
-    console.log('PARENT IS ACE SLOT');
     // False for isStack
-    const normalMoves = getNormalMoves(validSuits, validNumber, false);
+    const normalMoves = getNormalMoves(validSuits, value + 1, false);
     if (normalMoves && normalMoves.length > 0) {
       moves.push(...normalMoves);
     }
     // Ace and adding to ace slots
-  } else if (value === 14 || (isLast(index, length) && canAddToAceSlot(suit, validNumber))) {
-    console.log('first IF');
+  } else if (isValidAceSlotMove(card, parentElement, value, suit, validNumber)) {
     const suitedAceSlot = document.querySelector(`#${suit}-ace-slot`);
     moves.push(suitedAceSlot);
     // King - moving to empty card slots
   } else if (value === 13) {
-    console.log('second IF');
     moves.push(...getKingMoves(card, suit));
   } else {
-    console.log('third ELSE');
     validNumber = value + 1;
     // False for isStack
     const normalMoves = getNormalMoves(validSuits, validNumber, false);
@@ -58,8 +52,12 @@ const getPossibleMoves = (card) => {
   return moves;
 };
 
+const isValidAceSlotMove = (card, parentElement, value, suit, validNumber) => {
+  const { length, index } = getLengthAndIndex(card, parentElement);
+  return value === 14 || (isLast(index, length) && canAddToAceSlot(suit, validNumber));
+};
+
 const handleMove = (card, move) => {
-  console.log('handleMove');
   if (moveIsToAceSlot(move)) {
     addToAceSlot(card, move);
   } else if (moveIsToEmptyCardSlot(move)) {
@@ -85,15 +83,12 @@ const canAddToAceSlot = (suit, validNumber) => {
 };
 
 const getNormalMoves = (validSuits, validNumber, isStack) => {
-  console.log('getNormalMoves');
   const moves = [];
   for (const suit of validSuits) {
     const targets = [...document.querySelectorAll(`[value="${validNumber}"]`)].filter(
       (c) => c.getAttribute('suit') === suit
     );
-    console.log('targets:', targets);
     for (const target of targets) {
-      console.log('target:', target);
       if (
         !target.parentElement.classList.contains('ace-slot') &&
         isAValidTarget(target) &&
@@ -106,7 +101,6 @@ const getNormalMoves = (validSuits, validNumber, isStack) => {
 };
 
 const getStacksToMove = (card, value, color) => {
-  console.log('getStacksToMove');
   const nextCards = getCardsAfter(card);
   if (cardsAfterAreInOrder(nextCards, value, color)) {
     return nextCards;
@@ -115,50 +109,57 @@ const getStacksToMove = (card, value, color) => {
 };
 
 const handleStackMoves = (validSuits, validNumber, parentElement, cards) => {
-  console.log('handleStackMoves cards:', cards);
   // True for isStack
   const moves = getNormalMoves(validSuits, validNumber, true);
   if (moves && moves.length > 0) {
-    let move;
-    let isValid = false;
-    let i = 0;
-    while (!isValid) {
-      if (i >= moves.length) {
-        return;
-      }
-      move = moves[i].parentElement;
-      if (move.classList.contains('card-slot')) {
-        isValid = true;
-      }
-    }
-    console.log('handleStackMoves move:', move);
-    console.log('handleStackMoves cards:', cards);
-    for (const card of cards) {
-      setTimeout(() => {
-        console.log('handleStackMoves card:', card);
-        card.remove();
-        move.append(card);
-        handleOneCardSlotImgs(parentElement);
-      }, 50);
-    }
-    handleOneCardSlotImgs(move);
+    const move = filterMoves(moves);
+    moveStack(cards, move, parentElement);
   } else {
     return;
   }
 };
 
+const filterMoves = (moves) => {
+  let move;
+  let isValid = false;
+  let i = 0;
+  while (!isValid) {
+    if (i >= moves.length) {
+      return;
+    }
+    move = moves[i].parentElement;
+    if (move.classList.contains('card-slot')) {
+      isValid = true;
+    }
+  }
+  return move;
+};
+
+const moveStack = (cards, move, parentElement) => {
+  for (const card of cards) {
+    setTimeout(() => {
+      card.remove();
+      const { style } = card;
+      style.setProperty('margin-left', 0);
+      move.append(card);
+      handleOneCardSlotImgs(parentElement);
+    }, 50);
+  }
+  checkGameOver();
+  handleOneCardSlotImgs(move);
+};
+
 const isAValidTarget = (target) => {
-  console.log('isAValidTarget');
   const { parentElement } = target;
   const { length, index } = getLengthAndIndex(target, parentElement);
   return parentElement !== discardPile && parentElement !== deckPile && isLast(index, length) && isFaceUp(target);
 };
 
 const addToAceSlot = (card, move) => {
-  console.log('addToAceSlot card:', card);
-  console.log('addToAceSlot move:', move);
   const { parentElement } = card;
   card.remove();
+  const { style } = card;
+  style.setProperty('margin-left', 0);
   move.append(card);
   turnFaceUp(card);
   if ([...cardSlots].includes(parentElement)) {
@@ -167,10 +168,10 @@ const addToAceSlot = (card, move) => {
   if (parentElement === discardPile) {
     handleDiscardDisplay(true);
   }
+  checkGameOver();
 };
 
 const getKingMoves = (king, suit) => {
-  console.log('getKingMoves');
   const moves = [];
   for (const slot of cardSlots) {
     if (slot.children.length === 0) {
@@ -184,7 +185,19 @@ const getKingMoves = (king, suit) => {
 
 const moveCard = (card, move, isSlot) => {
   const { parentElement } = card;
+
+  // For kings with stack
+  if (isKingStackMove(card, move)) {
+    const { value, color } = getCardInfo(card);
+    // Move stack
+    const stackMoves = getStacksToMove(card, value, color);
+    const cards = [card, ...stackMoves];
+    moveStack(cards, move, parentElement);
+  }
+
   card.remove();
+  const { style } = card;
+  style.setProperty('margin-left', 0);
 
   if (parentElement === discardPile) {
     handleDiscardDisplay(true);
@@ -198,28 +211,22 @@ const moveCard = (card, move, isSlot) => {
     newParent.append(card);
     handleOneCardSlotImgs(newParent);
   }
-
   handleOneCardSlotImgs(parentElement);
+  checkGameOver();
 };
 
 const cardsAfterAreInOrder = (nextCards, currentValue, currentColor) => {
   let inOrder = true;
-  console.log('cardsAfterAreInOrder nextCards:', nextCards);
   if (!nextCards || nextCards.length === 0) {
     return;
   }
   let validNumber = currentValue - 1;
   for (const next of nextCards) {
-    console.log('next:', next);
     const { value, color } = getCardInfo(next);
-    console.log('cardsAfterAreInOrder value:', value);
-    console.log('cardsAfterAreInOrder color:', color);
     if (fitsPatternDown(color, currentColor, value, validNumber)) {
-      console.log('fitsPattern');
       currentColor = color;
       validNumber--;
     } else {
-      console.log('!fitsPattern');
       inOrder = false;
     }
   }
@@ -227,14 +234,28 @@ const cardsAfterAreInOrder = (nextCards, currentValue, currentColor) => {
 };
 
 const fitsPatternDown = (color, currentColor, value, validNumber) => {
-  console.log('fitsPatternDown color:', color);
-  console.log('fitsPatternDown currentColor:', currentColor);
-  console.log('fitsPatternDown colors !==:', color !== currentColor);
-  console.log('fitsPatternDown value:', value);
-  console.log('fitsPatternDown validNumber:', validNumber);
-  console.log('fitsPatternDown values ===:', value === validNumber);
-
   return color !== currentColor && value === validNumber;
 };
 
-export { cardsAfterAreInOrder, getPossibleMoves, handleMove, moveCard };
+const isKingStackMove = (card, move) => {
+  let isStack = false;
+  const isKing = card.getAttribute('rank') === 'king';
+  if (!isKing) {
+    return;
+  }
+  const { value, color } = getCardInfo(card);
+  const { parentElement } = move;
+  const isToAceSlot = moveIsToAceSlot(parentElement);
+
+  const stackMoves = getStacksToMove(card, value, color);
+  if (stackMoves && stackMoves.length > 0) {
+    isStack = true;
+  }
+  return isKing && !isToAceSlot && isStack ? true : false;
+};
+
+const handleAutoFinish = () => {
+  console.log('need to auto finish');
+};
+
+export { cardsAfterAreInOrder, getPossibleMoves, handleAutoFinish, handleMove, moveCard };

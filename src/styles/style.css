@@ -61,23 +61,23 @@ html {
 #shuffle-btn {
   background: transparent;
   background-image: url('../assets/images/refresh-white.png');
+  background-position: center;
+  background-repeat: no-repeat;
   background-size: contain;
   border: none;
   cursor: pointer;
   display: none;
-  height: 7rem;
+  height: var(--card-height);
   left: 50%;
   position: absolute;
   top: 50%;
+  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  width: 7rem;
+  width: var(--card-width);
 }
 
 #shuffle-btn:hover {
-  background-color: black;
-  background-repeat: no-repeat;
-  background-size: contain;
-  border-radius: 50%;
+  background-image: url('../assets/images/refresh-black.png');
 }
 
 #deck .card,
@@ -94,8 +94,10 @@ html {
   border-radius: 50%;
   bottom: 10%;
   color: blue;
+  display: flex;
   font-size: 2.5rem;
   font-weight: 700;
+  justify-content: center;
   left: 50%;
   padding: 1rem;
   position: absolute;
@@ -189,4 +191,50 @@ html {
   100% {
     transform: translateX(0);
   }
+}
+
+/* Modal */
+#modal {
+  background-color: white;
+  border: 1px solid;
+  display: none;
+  height: 50%;
+  left: 50%;
+  top: 50%;
+  overflow: auto;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  z-index: 1;
+}
+
+#modal-content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 3rem;
+  height: 50%;
+  justify-content: space-around;
+  margin: auto;
+}
+
+.btn {
+  background-color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 3rem;
+  padding: 1rem;
+}
+
+.btn:hover {
+  background-color: black;
+  color: white;
+}
+
+#reset-btn {
+  display: none;
+  font-size: 2rem;
+  left: 50%;
+  position: absolute;
+  top: 3px;
 }
