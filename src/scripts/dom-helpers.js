@@ -1,5 +1,5 @@
 import { REDS, reshuffleDeck } from './card-helpers';
-import { resetGame } from './game';
+import { getIsShrunk, resetGame, setIsShrunk } from './game';
 import { getLengthAndIndex } from './game-helpers';
 
 const deckContainer = document.querySelector('#deck-container');
@@ -12,6 +12,7 @@ const shuffleBtn = document.querySelector('#shuffle-btn');
 const modal = document.querySelector('#modal');
 const modalSubmit = document.querySelector('#modal-submit');
 const resetBtn = document.querySelector('#reset-btn');
+const normalSize = '20vh';
 
 const buildElement = (type, properties, attributes) => {
   const element = document.createElement(type);
@@ -47,7 +48,6 @@ const createCard = (card) => {
 };
 
 const convertToNewCard = (card) => {
-  console.log('convert card:', card);
   const suit = card.getAttribute('suit');
   const rank = card.getAttribute('rank');
   const value = Number(card.getAttribute('value'));
@@ -56,7 +56,6 @@ const convertToNewCard = (card) => {
 };
 
 const handleOneCardSlotImgs = (slot) => {
-  console.log('handleOneSlot slot:', slot);
   const { children } = slot;
   const { length } = children;
   if (length > 0) {
@@ -104,7 +103,6 @@ const updateDeckCount = (length) => {
 
 const handleDiscardDisplay = (isMove) => {
   const cards = discardPile.children;
-  console.log('discard cards:', cards);
   const { length } = cards;
   if (length > 3) {
     if (isMove) {
@@ -117,12 +115,10 @@ const handleDiscardDisplay = (isMove) => {
 
 const showPreviousCard = (cards) => {
   const hidden = document.querySelectorAll('.hidden-discard');
-  console.log('hidden:', hidden);
   const lastHidden = hidden[hidden.length - 1];
   lastHidden.classList.remove('hidden-discard');
   const index = [...cards].indexOf(lastHidden);
   const nextCard = cards[index + 1];
-  console.log('nextCard:', nextCard);
   nextCard.style.setProperty('margin-left', 'var(--overlap-right-margin)');
 };
 
@@ -181,21 +177,12 @@ const moveIsToEmptyCardSlot = (move) => {
 
 const getCardsAfter = (card) => {
   const cards = [];
-  console.log('getCardsAfter card:', card);
   const { parentElement } = card;
-  console.log('getCardsAfter parentElement:', parentElement);
-
   const { children } = parentElement;
-  console.log('getCardsAfter children:', children);
-
   const { length, index } = getLengthAndIndex(card, parentElement);
-  console.log('getCardsAfter length:', length);
-  console.log('getCardsAfter index:', index);
 
   for (let i = index + 1; i < length; i++) {
     const nextCard = children[i];
-    console.log('getCardsAfter nextCard:', nextCard);
-
     cards.push(nextCard);
   }
   return cards;
@@ -214,9 +201,77 @@ const closeModal = () => {
 const clearBoard = () => {
   const slotsToClear = [...aceSlots, ...cardSlots, deckPile, discardPile];
   for (const slot of slotsToClear) {
-    console.log('clear slot:', slot);
     slot.innerHTML = '';
   }
+};
+
+const isOffScreen = (element) => {
+  const bounding = element.getBoundingClientRect();
+  // eslint-disable-next-line sonarjs/prefer-object-literal
+  const out = {};
+  out.top = bounding.top < 0;
+  out.left = bounding.left < 0;
+  out.bottom = bounding.bottom > (window.innerHeight || document.documentElement.clientHeight);
+  out.right = bounding.right > (window.innerWidth || document.documentElement.clientWidth);
+  out.any = out.top || out.left || out.bottom || out.right;
+  return out.any;
+};
+
+const handleOffScreen = () => {
+  const offScreen = checkAllForOffScreen();
+  const isShrunk = getIsShrunk();
+  if (offScreen && !isShrunk) {
+    console.log('Card Off Screen');
+    setIsShrunk(true);
+    changeCardSize(false);
+  }
+  if (!offScreen && isShrunk) {
+    setIsShrunk(false);
+    changeCardSize(true);
+  }
+};
+
+const checkAllForOffScreen = () => {
+  let offScreen = false;
+  const cards = document.querySelectorAll('.card');
+  for (const card of cards) {
+    if (isOffScreen(card)) {
+      offScreen = true;
+    }
+  }
+  return offScreen;
+};
+
+const changeCardSize = (isNormal) => {
+  const rootCss = document.querySelector(':root');
+  if (isNormal) {
+    rootCss.style.setProperty('--card-height', normalSize);
+  } else {
+    // Shrink until all on screen
+    let isGood = false;
+    let smaller = normalSize - 1;
+    while (!isGood) {
+      rootCss.style.setProperty('--card-height', smaller);
+      const offScreen = checkAllForOffScreen();
+      if (offScreen) {
+        smaller -= 1;
+      } else {
+        isGood = true;
+      }
+    }
+  }
+};
+
+const getFaceDownCount = () => {
+  const faceDown = [];
+  const bottomBoard = document.querySelector('#bottom-board');
+  const bottomCards = bottomBoard.querySelectorAll('.card');
+  for (const card of bottomCards) {
+    if (!isFaceUp(card)) {
+      faceDown.push(card);
+    }
+  }
+  return faceDown.length;
 };
 
 export {
@@ -232,13 +287,16 @@ export {
   getCardInfo,
   getCardsAfter,
   getElementFromCard,
+  getFaceDownCount,
   handleCardSlotImgs,
   handleDeckCard,
   handleDiscardDisplay,
+  handleOffScreen,
   handleOneCardSlotImgs,
   hideShuffleButton,
   isFaceUp,
   isLast,
+  isOffScreen,
   moveIsToAceSlot,
   moveIsToEmptyCardSlot,
   openModal,

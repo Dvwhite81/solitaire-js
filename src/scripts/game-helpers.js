@@ -87,7 +87,6 @@ const handleCardClick = (e) => {
 };
 
 const isValidToClick = (card, parent) => {
-  console.log('isValidToClick');
   const { length, index } = getLengthAndIndex(card, parent);
   const { value, color } = getCardInfo(card);
   const nextCards = getCardsAfter(card);
@@ -95,8 +94,8 @@ const isValidToClick = (card, parent) => {
 };
 
 const handleValidCardClick = (card) => {
-  console.log('handleValidCardClick');
-  const possibleMoves = getPossibleMoves(card);
+  // False for isCheck
+  const possibleMoves = getPossibleMoves(card, false);
   if (possibleMoves && possibleMoves.length > 0) {
     const move = possibleMoves[0];
     handleMove(card, move);
@@ -111,7 +110,6 @@ const handleValidCardClick = (card) => {
 
 const checkForShuffle = () => {
   const { length } = deckPile.children;
-  console.log('length:', length);
   if (length === 0) {
     showShuffleButton();
   }
@@ -132,7 +130,6 @@ const checkForAutoFinish = () => {
       readyToFinish = false;
     }
   }
-  console.log('readyToFinish:', readyToFinish);
   return readyToFinish;
 };
 
@@ -141,7 +138,6 @@ const allFaceUp = (cards) => {
   for (const card of cards) {
     if (!isFaceUp(card)) {
       faceUp = false;
-      console.log('card is face up:', card);
     }
   }
   return faceUp;

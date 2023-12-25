@@ -1,4 +1,5 @@
 import { convertToNewCard, createCard, discardPile, hideShuffleButton } from './dom-helpers';
+import { checkCardCountToGiveUp } from './game';
 import { addCardListeners, placeDeck } from './game-helpers';
 
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
@@ -35,6 +36,7 @@ const getShuffledDeck = () => {
 };
 
 const reshuffleDeck = () => {
+  checkCardCountToGiveUp();
   const deck = [];
   const { children } = discardPile;
   const { length } = children;

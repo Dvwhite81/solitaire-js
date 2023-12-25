@@ -6,6 +6,7 @@ import {
   getCardInfo,
   getCardsAfter,
   handleDiscardDisplay,
+  handleOffScreen,
   handleOneCardSlotImgs,
   isFaceUp,
   isLast,
@@ -15,7 +16,8 @@ import {
 } from './dom-helpers';
 import { checkGameOver, getLengthAndIndex } from './game-helpers';
 
-const getPossibleMoves = (card) => {
+const getPossibleMoves = (card, isCheck) => {
+  console.log('getPossibleMoves isCheck:', isCheck);
   const moves = [];
   const { parentElement } = card;
   const { value, color } = getCardInfo(card);
@@ -46,7 +48,7 @@ const getPossibleMoves = (card) => {
     }
     const stackMoves = getStacksToMove(card, value, color);
     if (stackMoves && stackMoves.length > 0) {
-      handleStackMoves(validSuits, validNumber, parentElement, [card, ...stackMoves]);
+      handleStackMoves(validSuits, validNumber, parentElement, [card, ...stackMoves], isCheck);
     }
   }
   return moves;
@@ -108,12 +110,17 @@ const getStacksToMove = (card, value, color) => {
   return [];
 };
 
-const handleStackMoves = (validSuits, validNumber, parentElement, cards) => {
+const handleStackMoves = (validSuits, validNumber, parentElement, cards, isCheck) => {
   // True for isStack
+  console.log('handleStackMoves isCheck:', isCheck);
   const moves = getNormalMoves(validSuits, validNumber, true);
   if (moves && moves.length > 0) {
     const move = filterMoves(moves);
-    moveStack(cards, move, parentElement);
+    if (isCheck) {
+      return move;
+    } else {
+      moveStack(cards, move, parentElement);
+    }
   } else {
     return;
   }
@@ -142,6 +149,7 @@ const moveStack = (cards, move, parentElement) => {
       const { style } = card;
       style.setProperty('margin-left', 0);
       move.append(card);
+      handleOffScreen();
       handleOneCardSlotImgs(parentElement);
     }, 50);
   }
@@ -168,6 +176,7 @@ const addToAceSlot = (card, move) => {
   if (parentElement === discardPile) {
     handleDiscardDisplay(true);
   }
+  handleOffScreen();
   checkGameOver();
 };
 
@@ -213,6 +222,7 @@ const moveCard = (card, move, isSlot) => {
   }
   handleOneCardSlotImgs(parentElement);
   checkGameOver();
+  handleOffScreen();
 };
 
 const cardsAfterAreInOrder = (nextCards, currentValue, currentColor) => {
