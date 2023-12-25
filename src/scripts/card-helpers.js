@@ -54,4 +54,4 @@ const reshuffleDeck = () => {
   addCardListeners();
 };
 
-export { BLACKS, getShuffledDeck, REDS, reshuffleDeck, SUITS };
+export { BLACKS, getShuffledDeck, RANKS, REDS, reshuffleDeck, SUITS, VALUES };

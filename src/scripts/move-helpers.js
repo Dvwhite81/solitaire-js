@@ -17,7 +17,6 @@ import {
 import { checkGameOver, getLengthAndIndex } from './game-helpers';
 
 const getPossibleMoves = (card, isCheck) => {
-  console.log('getPossibleMoves isCheck:', isCheck);
   const moves = [];
   const { parentElement } = card;
   const { value, color } = getCardInfo(card);
@@ -38,7 +37,7 @@ const getPossibleMoves = (card, isCheck) => {
     moves.push(suitedAceSlot);
     // King - moving to empty card slots
   } else if (value === 13) {
-    moves.push(...getKingMoves(card, suit));
+    moves.push(...getKingMoves());
   } else {
     validNumber = value + 1;
     // False for isStack
@@ -112,7 +111,6 @@ const getStacksToMove = (card, value, color) => {
 
 const handleStackMoves = (validSuits, validNumber, parentElement, cards, isCheck) => {
   // True for isStack
-  console.log('handleStackMoves isCheck:', isCheck);
   const moves = getNormalMoves(validSuits, validNumber, true);
   if (moves && moves.length > 0) {
     const move = filterMoves(moves);
@@ -180,15 +178,13 @@ const addToAceSlot = (card, move) => {
   checkGameOver();
 };
 
-const getKingMoves = (king, suit) => {
+const getKingMoves = () => {
   const moves = [];
   for (const slot of cardSlots) {
     if (slot.children.length === 0) {
       moves.push(slot);
     }
   }
-  // Implement ace slot functionality
-  console.log('suit:', suit);
   return moves;
 };
 
@@ -264,8 +260,4 @@ const isKingStackMove = (card, move) => {
   return isKing && !isToAceSlot && isStack ? true : false;
 };
 
-const handleAutoFinish = () => {
-  console.log('need to auto finish');
-};
-
-export { cardsAfterAreInOrder, getPossibleMoves, handleAutoFinish, handleMove, moveCard };
+export { cardsAfterAreInOrder, getPossibleMoves, handleMove, moveCard };

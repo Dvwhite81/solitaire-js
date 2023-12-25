@@ -13,12 +13,14 @@ import { addCardListeners, addDeckListeners, dealCards, placeDeck } from './game
 let deck;
 let isShrunk;
 let cardCount;
+let tries;
 
 const setup = () => {
   deck = getShuffledDeck();
   isShrunk = false;
   // Face down cards to check for moves after round
   cardCount = 21;
+  tries = 0;
   placeDeck(deck, deckPile);
   dealCards(deck, cardSlots);
   startGame();
@@ -27,6 +29,7 @@ const setup = () => {
 const startGame = () => {
   addDeckListeners();
   resetBtn.addEventListener('click', resetGame);
+  resetBtn.style.display = 'none';
   setTimeout(() => {
     addCardListeners();
   }, 2500);
@@ -53,9 +56,13 @@ const getIsShrunk = () => {
 const checkCardCountToGiveUp = () => {
   const count = getFaceDownCount();
   if (count === cardCount) {
-    resetBtn.style.display = 'flex';
+    tries++;
+    if (tries === 2) {
+      resetBtn.style.display = 'flex';
+    }
   } else {
     cardCount = count;
+    tries = 0;
   }
 };
 

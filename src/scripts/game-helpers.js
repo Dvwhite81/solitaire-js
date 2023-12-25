@@ -1,3 +1,4 @@
+import { handleAutoFinish } from './auto-finish';
 import {
   aceSlots,
   cardSlots,
@@ -16,7 +17,7 @@ import {
   updateDeckCount
 } from './dom-helpers';
 import { endGame } from './game';
-import { cardsAfterAreInOrder, getPossibleMoves, handleAutoFinish, handleMove } from './move-helpers';
+import { cardsAfterAreInOrder, getPossibleMoves, handleMove } from './move-helpers';
 
 const placeDeck = (deck) => {
   const { length } = deck;
@@ -156,7 +157,6 @@ const checkAllAceSlotsFilled = () => {
 };
 
 const checkGameOver = () => {
-  console.log('checkGameOver');
   const readyToFinish = checkForAutoFinish();
   if (readyToFinish) {
     handleAutoFinish();

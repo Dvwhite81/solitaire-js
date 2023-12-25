@@ -221,7 +221,6 @@ const handleOffScreen = () => {
   const offScreen = checkAllForOffScreen();
   const isShrunk = getIsShrunk();
   if (offScreen && !isShrunk) {
-    console.log('Card Off Screen');
     setIsShrunk(true);
     changeCardSize(false);
   }
@@ -243,19 +242,25 @@ const checkAllForOffScreen = () => {
 };
 
 const changeCardSize = (isNormal) => {
+  console.log('changeCardSize');
   const rootCss = document.querySelector(':root');
   if (isNormal) {
+    console.log('isNormal');
     rootCss.style.setProperty('--card-height', normalSize);
   } else {
+    console.log('needs shrunk');
     // Shrink until all on screen
     let isGood = false;
     let smaller = normalSize - 1;
     while (!isGood) {
+      console.log('while smaller:', smaller);
       rootCss.style.setProperty('--card-height', smaller);
       const offScreen = checkAllForOffScreen();
       if (offScreen) {
+        console.log('still offScreen');
         smaller -= 1;
       } else {
+        console.log('good');
         isGood = true;
       }
     }
