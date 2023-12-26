@@ -114,7 +114,7 @@ html {
 
 #discard-pile {
   border: 1px solid white;
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   height: var(--card-height);
   width: calc(var(--card-width) * 2);
@@ -185,7 +185,7 @@ html {
 .card-front,
 .card-back {
   background-size: cover;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   height: var(--card-height);
   width: var(--card-width);
