@@ -92,18 +92,19 @@ html {
 #deck-count {
   background: #fff;
   border-radius: 50%;
-  bottom: 34.5%;
+  bottom: 35%;
   color: blue;
   display: flex;
-  font-size: 2.5rem;
+  font-size: 2vh;
   font-weight: 700;
   justify-content: center;
   left: 50%;
-  padding: 1rem;
+  padding: 1vh;
   position: absolute;
   text-align: center;
+  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  width: 2.5rem;
+  width: 2vh;
 }
 
 #deck,
