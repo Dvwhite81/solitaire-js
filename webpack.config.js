@@ -16,7 +16,7 @@ module.exports = {
 		path: path.resolve(__dirname, 'dist'),
 		filename: isProduction ? '[name].[fullhash].js' : '[name].js',
 		clean: true,
-		publicPath: '/solitaire-js/'
+		publicPath: '/'
 	},
 	optimization: {
 		minimize: isProduction
