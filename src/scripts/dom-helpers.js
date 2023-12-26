@@ -91,8 +91,8 @@ const isFaceUp = (card) => {
 
 const getImgs = (id) => {
   const imgId = `${id}-img`;
-  const imgSrc = `/assets/images/${id}.PNG`;
-  const backSrc = '/assets/images/card-back.PNG';
+  const imgSrc = `assets/images/${id}.png`;
+  const backSrc = 'assets/images/card-back.png';
   return { imgId, imgSrc, backSrc };
 };
 
