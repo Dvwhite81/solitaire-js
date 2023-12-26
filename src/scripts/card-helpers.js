@@ -4,6 +4,7 @@ import { addCardListeners, placeDeck } from './game-helpers';
 
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
+const NAMES = ['two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king', 'ace'];
 const VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 const REDS = ['diamonds', 'hearts'];
 const BLACKS = ['clubs', 'spades'];
@@ -54,4 +55,4 @@ const reshuffleDeck = () => {
   addCardListeners();
 };
 
-export { BLACKS, getShuffledDeck, RANKS, REDS, reshuffleDeck, SUITS, VALUES };
+export { BLACKS, getShuffledDeck, NAMES, RANKS, REDS, reshuffleDeck, SUITS, VALUES };

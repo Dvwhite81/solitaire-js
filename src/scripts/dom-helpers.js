@@ -1,6 +1,8 @@
-import { REDS, reshuffleDeck } from './card-helpers';
+import CardBack from '../assets/images/card-back.png';
+import { NAMES, RANKS, REDS, reshuffleDeck } from './card-helpers';
 import { resetGame } from './game';
 import { getLengthAndIndex } from './game-helpers';
+import { getImgSrc } from './image-helpers';
 
 const deckContainer = document.querySelector('#deck-container');
 const deckPile = document.querySelector('#deck');
@@ -28,9 +30,11 @@ const buildElement = (type, properties, attributes) => {
 const createCard = (card) => {
   const { suit, rank, value } = card;
   const rankStr = typeof rank === 'number' ? rank.toString() : rank;
+  const name = getName(rank);
   const id = `${rankStr}_of_${suit}`;
-  const { imgId, imgSrc, backSrc } = getImgs(id);
-
+  const imgId = `${name}_of_${suit}-img`;
+  const backSrc = CardBack;
+  const imgSrc = getImgSrc(imgId);
   const cardElement = buildElement('div', { id: id, className: 'card' }, { suit: suit, rank: rank, value: value });
 
   const cardFront = buildElement('img', {
@@ -44,6 +48,11 @@ const createCard = (card) => {
 
   cardElement.append(cardFront, cardBack);
   return cardElement;
+};
+
+const getName = (rank) => {
+  const index = RANKS.indexOf(rank);
+  return NAMES[index];
 };
 
 const convertToNewCard = (card) => {
@@ -87,13 +96,6 @@ const isLast = (index, length) => {
 const isFaceUp = (card) => {
   const cardFront = card.querySelector('.card-front');
   return cardFront.style.display !== 'none';
-};
-
-const getImgs = (id) => {
-  const imgId = `${id}-img`;
-  const imgSrc = `../assets/images/${id}.png`;
-  const backSrc = '../assets/images/card-back.png';
-  return { imgId, imgSrc, backSrc };
 };
 
 const updateDeckCount = (length) => {
