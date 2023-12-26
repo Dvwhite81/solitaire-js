@@ -1,6 +1,7 @@
 import { REDS, reshuffleDeck } from './card-helpers';
 import { resetGame } from './game';
 import { getLengthAndIndex } from './game-helpers';
+import { getImgs } from './image-helpers';
 
 const deckContainer = document.querySelector('#deck-container');
 const deckPile = document.querySelector('#deck');
@@ -87,13 +88,6 @@ const isLast = (index, length) => {
 const isFaceUp = (card) => {
   const cardFront = card.querySelector('.card-front');
   return cardFront.style.display !== 'none';
-};
-
-const getImgs = (id) => {
-  const imgId = `${id}-img`;
-  const imgSrc = `../assets/images/${id}.png`;
-  const backSrc = '../assets/images/card-back.png';
-  return { imgId, imgSrc, backSrc };
 };
 
 const updateDeckCount = (length) => {

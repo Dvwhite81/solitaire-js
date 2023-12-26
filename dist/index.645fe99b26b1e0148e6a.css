@@ -9,7 +9,7 @@
 }
 
 #container, html {
-  background: url(/c839b1fc71a5993808a2.jpg);
+  background: url(/solitaire-js/c839b1fc71a5993808a2.jpg);
   background-size: cover;
 }
 
@@ -51,7 +51,7 @@
 
 #shuffle-btn {
   background: transparent;
-  background-image: url(/e3cc06872392b8601e3a.png);
+  background-image: url(/solitaire-js/e3cc06872392b8601e3a.png);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: contain;
@@ -68,7 +68,7 @@
 }
 
 #shuffle-btn:hover {
-  background-image: url(/b81938690e72c5091274.png);
+  background-image: url(/solitaire-js/b81938690e72c5091274.png);
 }
 
 #deck .card, .ace-slot .card {
@@ -118,28 +118,28 @@
 }
 
 #clubs-ace-slot {
-  background: url(/053d5dc5544718f61832.png);
+  background: url(/solitaire-js/053d5dc5544718f61832.png);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 #diamonds-ace-slot {
-  background: url(/e0452e45745b4c0bfc2f.png);
+  background: url(/solitaire-js/e0452e45745b4c0bfc2f.png);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 #spades-ace-slot {
-  background: url(/3f3c2ed1b6200379334a.png);
+  background: url(/solitaire-js/3f3c2ed1b6200379334a.png);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 #hearts-ace-slot {
-  background: url(/f195cef2a0d1784e8a1c.png);
+  background: url(/solitaire-js/f195cef2a0d1784e8a1c.png);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: contain;
@@ -278,25 +278,25 @@
   font-display: swap;
   font-family: roboto;
   font-weight: 200;
-  src: url(/fonts/Roboto-Thin.ttf);
+  src: url(/solitaire-js/fonts/Roboto-Thin.ttf);
 }
 @font-face {
   font-display: swap;
   font-family: roboto;
   font-weight: 400;
-  src: url(/fonts/Roboto-Regular.ttf);
+  src: url(/solitaire-js/fonts/Roboto-Regular.ttf);
 }
 @font-face {
   font-display: swap;
   font-family: roboto;
   font-weight: 700;
-  src: url(/fonts/Roboto-Medium.ttf);
+  src: url(/solitaire-js/fonts/Roboto-Medium.ttf);
 }
 @font-face {
   font-display: swap;
   font-family: roboto;
   font-weight: 900;
-  src: url(/fonts/Roboto-Bold.ttf);
+  src: url(/solitaire-js/fonts/Roboto-Bold.ttf);
 }
 * {
   font-family: roboto, sans-serif;
