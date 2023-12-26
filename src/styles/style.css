@@ -17,9 +17,9 @@ html {
 #container {
   background: url('../assets/images/background.jpg');
   background-size: cover;
-	display: flex;
-	height: 100vh;
-	width: 100vw;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
 }
 
 /* Whole game container */
@@ -92,7 +92,7 @@ html {
 #deck-count {
   background: #fff;
   border-radius: 50%;
-  bottom: 10%;
+  bottom: 34.5%;
   color: blue;
   display: flex;
   font-size: 2.5rem;
@@ -127,9 +127,32 @@ html {
   margin-left: var(--overlap-right-margin);
 }
 
-.ace-slot {
-  background: url('../assets/images/ace-background.png');
-  background-size: cover;
+#clubs-ace-slot {
+  background: url('../assets/images/club.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+#diamonds-ace-slot {
+  background: url('../assets/images/diamond.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+#spades-ace-slot {
+  background: url('../assets/images/spade.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+#hearts-ace-slot {
+  background: url('../assets/images/heart.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 #ace-slots-container {
@@ -195,16 +218,19 @@ html {
 
 /* Modal */
 #modal {
-  background-color: white;
+  background-color: gainsboro;
   border: 1px solid;
+  border-radius: 20%;
+  box-shadow: -20px 20px 20px 20px;
   display: none;
-  height: 50%;
+  height: 40vh;
   left: 50%;
-  top: 50%;
   overflow: auto;
   position: fixed;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  width: 50%;
+  width: 50vh;
   z-index: 1;
 }
 
@@ -213,7 +239,7 @@ html {
   display: flex;
   flex-direction: column;
   font-size: 3rem;
-  height: 50%;
+  height: 75%;
   justify-content: space-around;
   margin: auto;
 }

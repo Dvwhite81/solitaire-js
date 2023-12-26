@@ -56,9 +56,11 @@ const flipCard = (e) => {
     return;
   }
   const cardToFlip = handleDeckCard(deck);
-  discardPile.append(cardToFlip);
-  handleDiscardDisplay(false);
-  checkForShuffle();
+  if (cardToFlip) {
+    discardPile.append(cardToFlip);
+    handleDiscardDisplay(false);
+    checkForShuffle();
+  }
 };
 
 const addDeckListeners = () => {

@@ -1,5 +1,5 @@
 import { REDS, reshuffleDeck } from './card-helpers';
-import { getIsShrunk, resetGame, setIsShrunk } from './game';
+import { resetGame } from './game';
 import { getLengthAndIndex } from './game-helpers';
 
 const deckContainer = document.querySelector('#deck-container');
@@ -12,7 +12,6 @@ const shuffleBtn = document.querySelector('#shuffle-btn');
 const modal = document.querySelector('#modal');
 const modalSubmit = document.querySelector('#modal-submit');
 const resetBtn = document.querySelector('#reset-btn');
-const normalSize = '20vh';
 
 const buildElement = (type, properties, attributes) => {
   const element = document.createElement(type);
@@ -205,68 +204,6 @@ const clearBoard = () => {
   }
 };
 
-const isOffScreen = (element) => {
-  const bounding = element.getBoundingClientRect();
-  // eslint-disable-next-line sonarjs/prefer-object-literal
-  const out = {};
-  out.top = bounding.top < 0;
-  out.left = bounding.left < 0;
-  out.bottom = bounding.bottom > (window.innerHeight || document.documentElement.clientHeight);
-  out.right = bounding.right > (window.innerWidth || document.documentElement.clientWidth);
-  out.any = out.top || out.left || out.bottom || out.right;
-  return out.any;
-};
-
-const handleOffScreen = () => {
-  const offScreen = checkAllForOffScreen();
-  const isShrunk = getIsShrunk();
-  if (offScreen && !isShrunk) {
-    setIsShrunk(true);
-    changeCardSize(false);
-  }
-  if (!offScreen && isShrunk) {
-    setIsShrunk(false);
-    changeCardSize(true);
-  }
-};
-
-const checkAllForOffScreen = () => {
-  let offScreen = false;
-  const cards = document.querySelectorAll('.card');
-  for (const card of cards) {
-    if (isOffScreen(card)) {
-      offScreen = true;
-    }
-  }
-  return offScreen;
-};
-
-const changeCardSize = (isNormal) => {
-  console.log('changeCardSize');
-  const rootCss = document.querySelector(':root');
-  if (isNormal) {
-    console.log('isNormal');
-    rootCss.style.setProperty('--card-height', normalSize);
-  } else {
-    console.log('needs shrunk');
-    // Shrink until all on screen
-    let isGood = false;
-    let smaller = normalSize - 1;
-    while (!isGood) {
-      console.log('while smaller:', smaller);
-      rootCss.style.setProperty('--card-height', smaller);
-      const offScreen = checkAllForOffScreen();
-      if (offScreen) {
-        console.log('still offScreen');
-        smaller -= 1;
-      } else {
-        console.log('good');
-        isGood = true;
-      }
-    }
-  }
-};
-
 const getFaceDownCount = () => {
   const faceDown = [];
   const bottomBoard = document.querySelector('#bottom-board');
@@ -296,12 +233,10 @@ export {
   handleCardSlotImgs,
   handleDeckCard,
   handleDiscardDisplay,
-  handleOffScreen,
   handleOneCardSlotImgs,
   hideShuffleButton,
   isFaceUp,
   isLast,
-  isOffScreen,
   moveIsToAceSlot,
   moveIsToEmptyCardSlot,
   openModal,

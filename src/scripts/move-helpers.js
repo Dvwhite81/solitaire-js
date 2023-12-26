@@ -6,7 +6,6 @@ import {
   getCardInfo,
   getCardsAfter,
   handleDiscardDisplay,
-  handleOffScreen,
   handleOneCardSlotImgs,
   isFaceUp,
   isLast,
@@ -14,6 +13,7 @@ import {
   moveIsToEmptyCardSlot,
   turnFaceUp
 } from './dom-helpers';
+import { handleOffScreen } from './game';
 import { checkGameOver, getLengthAndIndex } from './game-helpers';
 
 const getPossibleMoves = (card, isCheck) => {
